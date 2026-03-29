@@ -1,6 +1,7 @@
 {
     'name': 'Easy Access Control',
-    'version': '16.0.1.0.0',
+    'version': '16.0.1.0.2',  # 🔥 version change (cache fix)
+
     'summary': 'Control user access (Create, Edit, Delete) easily in Odoo',
 
     'description': """
@@ -33,9 +34,9 @@ Improve your data safety and prevent unwanted changes in your Odoo system.
         'views/res_partner_view.xml',
     ],
 
-    # 🔥 IMPORTANT (Cover image fix)
+    # ✅ Cover image (IMPORTANT)
     'images': [
-        'static/description/main_screenshot.png',
+        'static/description/banner.png',
     ],
 
     'installable': True,
