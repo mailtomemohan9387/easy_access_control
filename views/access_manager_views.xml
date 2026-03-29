@@ -1,0 +1,59 @@
+<odoo>
+
+    <record id="view_access_tree" model="ir.ui.view">
+        <field name="name">access.manager.tree</field>
+        <field name="model">access.manager</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="model_id"/>
+                <field name="can_read"/>
+                <field name="can_create"/>
+                <field name="can_write"/>
+                <field name="can_delete"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_access_form" model="ir.ui.view">
+        <field name="name">access.manager.form</field>
+        <field name="model">access.manager</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="model_id"/>
+                </group>
+
+                <group string="Permissions">
+                    <field name="can_read"/>
+                    <field name="can_create"/>
+                    <field name="can_write"/>
+                    <field name="can_delete"/>
+                </group>
+
+                <group string="UI Control">
+                    <field name="hide_create"/>
+                    <field name="hide_edit"/>
+                    <field name="hide_delete"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <menuitem id="menu_access_root" name="Access Control"/>
+
+    <record id="action_access_rules" model="ir.actions.act_window">
+        <field name="name">Access Rules</field>
+        <field name="res_model">access.manager</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_access_rules"
+              name="Rules"
+              parent="menu_access_root"
+              action="action_access_rules"/>
+
+</odoo>
