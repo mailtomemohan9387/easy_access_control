@@ -31,7 +31,6 @@ Improve your data safety and prevent unwanted changes in your Odoo system.
     'data': [
         'security/ir.model.access.csv',
         'views/access_manager_views.xml',
-        'views/res_partner_view.xml',
     ],
 
     # ✅ Cover image (IMPORTANT)
