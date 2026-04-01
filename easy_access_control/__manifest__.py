@@ -20,7 +20,7 @@ Features:
 Improve your data safety and prevent unwanted changes in your Odoo system.
 """,
 
-    'author': 'Mohan',
+    'author': 'Mohan Mathanabalan',
     'website': 'https://github.com/mailtomemohan9387/easy_access_control',
 
     'category': 'Extra Tools',
