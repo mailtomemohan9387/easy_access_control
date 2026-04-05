@@ -20,7 +20,7 @@ Main Features:
 This module helps improve data safety and prevents unwanted changes in your Odoo system.
 """,
 
-    'author': 'Mohan',
+    'author': 'Mohan Mathanabalan',
     'website': 'https://github.com/mailtomemohan9387/easy_access_control',
     'category': 'Extra Tools',
     'license': 'LGPL-3',
