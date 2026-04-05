@@ -1,0 +1,86 @@
+<odoo>
+
+    <record id="view_access_tree" model="ir.ui.view">
+        <field name="name">access.manager.tree</field>
+        <field name="model">access.manager</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="active"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="model_id"/>
+                <field name="can_read"/>
+                <field name="can_create"/>
+                <field name="can_write"/>
+                <field name="can_delete"/>
+                <field name="hide_create"/>
+                <field name="hide_edit"/>
+                <field name="hide_delete"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_access_form" model="ir.ui.view">
+        <field name="name">access.manager.form</field>
+        <field name="model">access.manager</field>
+        <field name="arch" type="xml">
+            <form string="Access Rule">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="active"/>
+                            <field name="name"/>
+                            <field name="user_id"/>
+                            <field name="model_id"/>
+                        </group>
+                    </group>
+
+                    <group string="Permissions">
+                        <group>
+                            <field name="can_read"/>
+                            <field name="can_create"/>
+                            <field name="can_write"/>
+                            <field name="can_delete"/>
+                        </group>
+                    </group>
+
+                    <group string="UI Control">
+                        <group>
+                            <field name="hide_create"/>
+                            <field name="hide_edit"/>
+                            <field name="hide_delete"/>
+                        </group>
+                    </group>
+
+                    <group string="Notes">
+                        <field name="notes" placeholder="Add internal notes about this rule..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_access_rules" model="ir.actions.act_window">
+        <field name="name">Access Rules</field>
+        <field name="res_model">access.manager</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first access rule
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_access_root"
+              name="Access Control"
+              sequence="100"
+              groups="base.group_system"/>
+
+    <menuitem id="menu_access_rules"
+              name="Rules"
+              parent="menu_access_root"
+              action="action_access_rules"
+              sequence="10"
+              groups="base.group_system"/>
+
+</odoo>
