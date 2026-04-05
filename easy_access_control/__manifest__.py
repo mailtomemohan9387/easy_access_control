@@ -1,28 +1,27 @@
 {
     'name': 'Easy Access Control',
-    'version': '16.0.1.1',  # 🔥 version change (cache fix)
-
-    'summary': 'Control user access (Create, Edit, Delete) easily in Odoo',
+    'version': '16.0.1.1',
+    'summary': 'Control create, edit, delete, and read access for users in Odoo',
 
     'description': """
 Easy Access Control
 
-A simple and powerful module to control user permissions at model level.
+A simple and powerful Odoo module to control user permissions at model level.
 
-Features:
+Main Features:
 - Block Create action
 - Block Edit action
 - Block Delete action
+- Block Read access
 - User-based access control
 - Model-level restriction
 - Easy configuration
 
-Improve your data safety and prevent unwanted changes in your Odoo system.
+This module helps improve data safety and prevents unwanted changes in your Odoo system.
 """,
 
-    'author': 'Mohan Mathanabalan',
+    'author': 'Mohan',
     'website': 'https://github.com/mailtomemohan9387/easy_access_control',
-
     'category': 'Extra Tools',
     'license': 'LGPL-3',
 
@@ -33,7 +32,6 @@ Improve your data safety and prevent unwanted changes in your Odoo system.
         'views/access_manager_views.xml',
     ],
 
-    # ✅ Cover image (IMPORTANT)
     'images': [
         'static/description/banner.png',
     ],
@@ -41,7 +39,6 @@ Improve your data safety and prevent unwanted changes in your Odoo system.
     'installable': True,
     'application': True,
     'auto_install': False,
-
     'price': 49.0,
     'currency': 'USD',
 }
