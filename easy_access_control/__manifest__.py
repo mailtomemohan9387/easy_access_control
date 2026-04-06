@@ -21,7 +21,7 @@ This module helps improve data safety and prevents unwanted changes in your Odoo
 """,
 
     'author': 'Mohan Mathanabalan',
-    'website': 'https://github.com/mailtomemohan9387/easy_access_control',
+    'website': 'mailto:mailtomemohan94@gmail.com',
     'category': 'Extra Tools',
     'license': 'LGPL-3',
 
