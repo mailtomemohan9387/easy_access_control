@@ -33,35 +33,65 @@ class AccessManager(models.Model):
     ]
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    def _get_access_rule(self):
-        return self.env['access.manager'].search([
-            ('user_id', '=', self.env.user.id),
-            ('model_id.model', '=', 'res.partner'),
-            ('active', '=', True),
-        ], limit=1)
+class BaseModel(models.AbstractModel):
+    _inherit = 'base'
 
     def _is_easy_access_bypassed(self):
         return self.env.is_superuser() or self.env.user.has_group('base.group_system')
 
+    def _is_easy_access_internal_model(self):
+        internal_prefixes = (
+            'ir.',
+            'base.',
+            'bus.',
+            'web.',
+            'mail.',
+        )
+        internal_models = {
+            'access.manager',
+            'res.users',
+            'res.users.log',
+            'res.groups',
+            'res.company',
+            'res.lang',
+        }
+        return self._name.startswith(internal_prefixes) or self._name in internal_models
+
+    def _get_access_rule(self):
+        if self._is_easy_access_bypassed() or self._is_easy_access_internal_model():
+            return False
+
+        # login / registry load time safe guard
+        if 'access.manager' not in self.env:
+            return False
+
+        return self.env['access.manager'].sudo().search([
+            ('user_id', '=', self.env.user.id),
+            ('model_id.model', '=', self._name),
+            ('active', '=', True),
+        ], limit=1)
+
     def _check_easy_access(self, operation):
-        if self._is_easy_access_bypassed():
+        if self._is_easy_access_bypassed() or self._is_easy_access_internal_model():
             return
 
         rule = self._get_access_rule()
         if not rule:
             return
 
+        model_label = self._name
+        ir_model = self.env['ir.model']._get(self._name)
+        if ir_model and ir_model.name:
+            model_label = ir_model.name
+
         if operation == 'read' and not rule.can_read:
-            raise UserError(_("You are not allowed to view Contacts."))
+            raise UserError(_("You are not allowed to view %s.") % model_label)
         elif operation == 'create' and not rule.can_create:
-            raise UserError(_("You are not allowed to create Contacts."))
+            raise UserError(_("You are not allowed to create %s.") % model_label)
         elif operation == 'write' and not rule.can_write:
-            raise UserError(_("You are not allowed to edit Contacts."))
+            raise UserError(_("You are not allowed to edit %s.") % model_label)
         elif operation == 'unlink' and not rule.can_delete:
-            raise UserError(_("You are not allowed to delete Contacts."))
+            raise UserError(_("You are not allowed to delete %s.") % model_label)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -88,47 +118,49 @@ class ResPartner(models.Model):
             fields=fields,
             offset=offset,
             limit=limit,
-            order=order
+            order=order,
         )
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        result = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+    def get_views(self, views, options=None):
+        result = super().get_views(views, options=options)
 
-        if self._is_easy_access_bypassed():
+        if self._is_easy_access_bypassed() or self._is_easy_access_internal_model():
             return result
 
         rule = self._get_access_rule()
         if not rule:
             return result
 
-        arch = result.get('arch')
-        if not arch:
+        result_views = result.get('views', {})
+        if not result_views:
             return result
 
-        try:
-            doc = etree.XML(arch)
-        except Exception:
-            return result
+        for _view_type, view_data in result_views.items():
+            arch = view_data.get('arch')
+            if not arch:
+                continue
 
-        if view_type in ('tree', 'form', 'kanban'):
+            try:
+                doc = etree.XML(arch)
+            except Exception:
+                continue
+
             if rule.hide_create:
-                for node_name in ('tree', 'form', 'kanban'):
-                    for node in doc.xpath(f'//{node_name}'):
-                        node.set('create', '0')
+                for node in doc.xpath('//list | //form | //kanban'):
+                    node.set('create', '0')
 
             if rule.hide_edit:
-                for node_name in ('form', 'tree', 'kanban'):
-                    for node in doc.xpath(f'//{node_name}'):
-                        node.set('edit', '0')
+                for node in doc.xpath('//list | //form | //kanban'):
+                    node.set('edit', '0')
 
             if rule.hide_delete:
-                for node_name in ('form', 'tree', 'kanban'):
-                    for node in doc.xpath(f'//{node_name}'):
-                        node.set('delete', '0')
+                for node in doc.xpath('//list | //form | //kanban'):
+                    node.set('delete', '0')
 
-                for action_node in doc.xpath("//button[@name='unlink']"):
-                    action_node.set('invisible', '1')
+                for btn in doc.xpath("//button[@name='unlink']"):
+                    btn.set('invisible', '1')
 
-        result['arch'] = etree.tostring(doc, encoding='unicode')
+            view_data['arch'] = etree.tostring(doc, encoding='unicode')
+
         return result

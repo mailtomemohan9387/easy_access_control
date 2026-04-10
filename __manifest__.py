@@ -1,6 +1,6 @@
 {
     'name': 'Easy Access Control',
-    'version': '16.0.1.1',
+    'version': '19.0.1.0.0',
     'summary': 'Control create, edit, delete, and read access for users in Odoo',
 
     'description': """
